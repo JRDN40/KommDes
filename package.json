@@ -1,0 +1,23 @@
+{
+  "name": "unkonventionelletypografie",
+  "version": "1.0.0",
+  "description": "Kommunikationsdesign",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jorden Reuter, Nangiale Shir",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "dependencies": {
+    "blotter": "^2.1.0",
+    "blotter.js": "^0.1.0",
+    "dat.gui": "^0.7.7",
+    "gatsby-plugin-typography": "^2.5.10",
+    "jquery": "^3.5.1",
+    "react-typography": "^0.16.19",
+    "typography": "^0.16.19"
+  }
+}
