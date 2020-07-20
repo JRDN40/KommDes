@@ -1,7 +1,8 @@
 $(document).ready(function() {
+var activeEffect ='';
 var fizzyText = function() {
     //setting props
-    this.content = '';
+    this.content = 'Dein Text hier';
     this.effect = 'ChannelSplit';
     this.family= 'Impact';
     this.size= 0;
@@ -10,11 +11,13 @@ var fizzyText = function() {
     this.paddingRight= 0;
     this.paddingTop= 0;
     this.paddingBottom= 0;
+    this.movement = true;
   // Effect propertys Channel
-    this.uOffset = 2;
-    this.uRotation = 2;
-    this.uApplyBlur = 0;
+    this.uOffset = 0.0;
+    this.uRotation = 0.0;
+    this.uApplyBlur = false;
     this.uAnimateNoise = 1;
+    this.configurable =true;
   };
 
 
@@ -24,7 +27,12 @@ var fizzyText = function() {
     var props = new fizzyText();
     var gui = new dat.GUI();
     gui.remember(fizzyText);
-    gui.add(props, 'content').onChange( function() {
+    var f1 = gui.addFolder('Text Einstellungen');
+    var f2 = gui.addFolder('Channel Split Einstellungen');
+    var f3 = gui.addFolder('Flies Einstellungen');
+    var f4 = gui.addFolder('Liquid Einstellungen');
+    f1.open();
+    f1.add(props, 'content').onChange( function() {
 
         if(props.effect == 'Flies'){
             setTimeout(() => createFlies(), 1000)
@@ -41,10 +49,10 @@ var fizzyText = function() {
     }
 
     );
-    gui.add(props, 'size', 100, 300).onChange(function(){
-        Object.defineProperties(property, {
+    f1.add(props, 'size', 100, 300).onChange(function(){
+       Object.defineProperties(property, {
             size: { value:props.size}
-        })
+        }) 
         if(props.effect == 'Flies'){
             setTimeout(() => createFlies(), 1000)
         }else if(props.effect == 'ChannelSplit'){
@@ -58,7 +66,7 @@ var fizzyText = function() {
         }  
       
     })
-    gui.add(props, 'effect', [ 'ChannelSplit', 'Flies', 'Liquid', 'Rolling', 'Sliding' ] ).onChange(function(){
+    f1.add(props, 'effect', [ 'ChannelSplit', 'Flies', 'Liquid', 'Rolling', 'Sliding' ] ).onChange(function(){
         if(props.effect == 'Flies'){
             setTimeout(() => createFlies(), 1000)
         }else if(props.effect == 'ChannelSplit'){
@@ -74,7 +82,7 @@ var fizzyText = function() {
 
     );
 
-    gui.add(props, 'family', [ 'Impact','Charcoal','sans-serif' ]).onChange( function () {
+    f1.add(props, 'family', [ 'Impact','Charcoal','sans-serif' ]).onChange( function () {
         Object.defineProperties(property, {
             family: { value:props.family}
         })
@@ -90,7 +98,28 @@ var fizzyText = function() {
             setTimeout(() => createSliding(), 1000)
         }
     });
-    gui.addColor(props, 'fill').onChange(function() {
+    
+   /** f1.add(props,'movement').onChange( function () {
+        Object.defineProperties(property, {
+            movement: { value:props.movement}
+        })
+        if(props.effect == 'Flies'){
+            setTimeout(() => createFlies(), 1000)
+        }else if(props.effect == 'ChannelSplit'){
+            setTimeout(() => createChannelSplit(), 1000)
+        }else if(props.effect == 'Liquid'){
+            setTimeout(() => createLiquid(), 1000)
+        }else if(props.effect == 'Rolling'){
+            setTimeout(() => createRolling(), 1000)
+        }else if(props.effect == 'Sliding'){
+            setTimeout(() => createSliding(), 1000)
+        }
+    }); 
+    Funktioniert noch nicht
+    **/
+    
+    
+    f1.addColor(props, 'fill').onChange(function() {
         Object.defineProperties(property, {
             fill: { value:props.fill}
         })
@@ -106,7 +135,7 @@ var fizzyText = function() {
             setTimeout(() => createSliding(), 1000)
         } 
     });
-    gui.add(props, 'paddingLeft', 80, 180).onChange(function() {
+    f1.add(props, 'paddingLeft', 80, 180).onChange(function() {
         Object.defineProperties(property, {
             paddingLeft: { value:props.paddingLeft}
         })
@@ -122,7 +151,7 @@ var fizzyText = function() {
             setTimeout(() => createSliding(), 1000)
         }
     });
-    gui.add(props, 'paddingRight', 80, 180).onChange(function() {
+    f1.add(props, 'paddingRight', 80, 180).onChange(function() {
         Object.defineProperties(property, {
             paddingRight: { value:props.paddingRight}
         })
@@ -138,7 +167,7 @@ var fizzyText = function() {
             setTimeout(() => createSliding(), 1000)
         }
     })
-    gui.add(props, 'paddingTop', 80, 180).onChange(function() {
+    f1.add(props, 'paddingTop', 80, 180).onChange(function() {
         Object.defineProperties(property, {
             paddingTop: { value:props.paddingTop}
         })
@@ -154,7 +183,7 @@ var fizzyText = function() {
             setTimeout(() => createSliding(), 1000)
         }
     })
-    gui.add(props, 'paddingBottom', 80, 180).onChange(function() {
+    f1.add(props, 'paddingBottom', 80, 180).onChange(function() {
         Object.defineProperties(property, {
             paddingBottom: { value:props.paddingBottom}
         })
@@ -184,7 +213,7 @@ var fizzyText = function() {
 //---
 
 
-var update = function() {
+/* var update = function() {
 
     requestAnimationFrame(update);
   
@@ -196,8 +225,8 @@ var update = function() {
   
   };
   
-  update();
-//---
+  update(); */
+//--- Überflüssig wegen OnChangen + Performance Probleme
 var blotter;
 var scope2;
  
@@ -218,10 +247,11 @@ var scope2;
 
         scope2 = blotter.forText(text);
         scope2.appendTo(document.body);
-        if($(".b-canvas")[0] && $(".b-canvas").length > 1){
+       if($(".b-canvas")[0] && $(".b-canvas").length > 1){
             $(".b-canvas")[0].remove();
           //  console.log($(".b-canvas")[0])
             }
+      /** if(movement == true){ */
             document.onmousemove = moveIt;
             function moveIt(event) {
             
@@ -229,8 +259,9 @@ var scope2;
                 materialChannelSplit.uniforms.uOffset.value = (event.clientX * .0001);
             
             }
+       /**}*/
             
-            
+ 
    } 
 
   var createFlies = function () {
@@ -260,7 +291,6 @@ var scope2;
             materialFlies.uniforms.uSpeed.value = (event.clientX * 0.02);
 
         }
-         
    }
 
    // Liquid
@@ -375,5 +405,4 @@ var scope2;
     
     
   
-
 });
